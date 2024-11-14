@@ -15,12 +15,6 @@ namespace Web.API.Controllers
             this.estudianteService = estudianteService;
         }
 
-        [HttpGet]
-        public IActionResult GetEstudiantes()
-        {
-            throw new NotImplementedException();
-        }
-
         [HttpPost("AgregarEstudiante")]
         public IActionResult AgregarEstudiante([FromBody] AgregarEstudianteRequest request)
         {

@@ -12,6 +12,8 @@
 
   <ItemGroup>
     <ProjectReference Include="..\CrombieConsole\CrombieConsole.csproj" />
+    <ProjectReference Include="..\Model\Model.csproj" />
+    <ProjectReference Include="..\Services\Services.csproj" />
   </ItemGroup>
 
 </Project>

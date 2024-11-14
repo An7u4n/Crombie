@@ -1,7 +1,5 @@
 ﻿using CrombieConsole.model;
-using DocumentFormat.OpenXml.Bibliography;
-using DocumentFormat.OpenXml.Drawing.Charts;
-using DocumentFormat.OpenXml.Spreadsheet;
+
 
 namespace CrombieConsole.Services
 {
