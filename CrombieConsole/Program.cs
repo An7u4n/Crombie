@@ -1,28 +1,16 @@
 ﻿using CrombieConsole.model;
-using System.Runtime.CompilerServices;
+using CrombieConsole.Services;
 
 var biblioteca = new Biblioteca();
+var excelService = new ExcelService(AppDomain.CurrentDomain.BaseDirectory + "../../../BibliotecaBaseDatos.xlsx");
+var bibliotecaService = new BibliotecaService(biblioteca, excelService);
+
+bibliotecaService.CargarDatos();
 
 while (true)
 {
     Console.Clear();
     mostrarMenu();
-}
-
-void AgregarLibro() {
-    Console.WriteLine("Ingrese el titulo");
-    var titulo = Console.ReadLine();
-    Console.WriteLine("Ingrese el autor");
-    var autor = Console.ReadLine();
-    Console.WriteLine("Ingrese el numero de isbn");
-    int isbn;
-    var isbnParse = int.TryParse(Console.ReadLine(), out isbn);
-    if(titulo == null || autor == null || isbnParse == false)
-    {
-        Console.WriteLine("Algun campo mal ingresado");
-        return;
-    }
-    biblioteca.AgregarLibro(titulo, autor, isbn);
 }
 
 void AgregarUsuario()
@@ -32,28 +20,27 @@ void AgregarUsuario()
     Console.WriteLine("Ingrese el numero de id de usuario");
     int id;
     var idParse = int.TryParse(Console.ReadLine(), out id);
-    if(idParse == false || nombre == null)
+    if (idParse == false || nombre == null)
     {
         Console.WriteLine("Algun campo mal ingresado");
         return;
     }
-    biblioteca.RegistrarUsuario(nombre, id);
-}
+    int tipoUsuario;
+    Console.WriteLine("Ingrese el tipo de usuario (1. Profesor, 2. Estudiante)");
+    var tipoUsuarioParse = int.TryParse(Console.ReadLine(), out tipoUsuario);
 
-void PrestarLibro()
-{
-    Console.WriteLine("Ingrese el id del usuario");
-    int idUsuario;
-    var usuarioParse = int.TryParse(Console.ReadLine(), out idUsuario);
-    Console.WriteLine("Ingrese el isbn del libro");
-    int isbn;
-    var isbnParse = int.TryParse(Console.ReadLine(), out isbn);
-    if(usuarioParse == false || isbnParse == false)
+    if (tipoUsuarioParse == false)
     {
-        Console.WriteLine("Algun campo mal ingresado");
+        Console.WriteLine("Opcion Incorrecta");
         return;
     }
-    biblioteca.PrestarLibro(idUsuario, isbn);
+
+    if(tipoUsuario == 1) 
+        bibliotecaService.RegistrarProfesor(nombre, id);
+    else if (tipoUsuario == 2) 
+        bibliotecaService.RegistrarEstudiante(nombre, id);
+    else Console.WriteLine("Opcion Incorrecta");
+    Console.ReadLine();
 }
 
 void DevolverLibro()
@@ -62,13 +49,14 @@ void DevolverLibro()
     var usuario = int.Parse(Console.ReadLine());
     Console.WriteLine("Ingrese el isbn del libro");
     var isbn = int.Parse(Console.ReadLine());
-
-    biblioteca.DevolverLibro(isbn, usuario);
+    bibliotecaService.DevolverLibro(isbn, usuario);
+    Console.ReadLine();
 }
 
 void VerEstadoDeLosLibros()
 {
-    biblioteca.VerEstadoLibros();
+    bibliotecaService.VerEstadoLibros();
+    Console.ReadLine();
 }
 
 void VerLibrosPrestadosUsuario()
@@ -76,7 +64,44 @@ void VerLibrosPrestadosUsuario()
     Console.WriteLine("Ingrese el id del usuario");
     var usuario = int.Parse(Console.ReadLine());
 
-    biblioteca.MostrarLibrosPrestadosUsuario(usuario);
+    bibliotecaService.MostrarLibrosPrestadosUsuario(usuario);
+    Console.ReadLine();
+
+}
+
+void AgregarLibro()
+{
+    Console.WriteLine("Ingrese el titulo");
+    var titulo = Console.ReadLine();
+    Console.WriteLine("Ingrese el autor");
+    var autor = Console.ReadLine();
+    Console.WriteLine("Ingrese el numero de isbn");
+    int isbn;
+    var isbnParse = int.TryParse(Console.ReadLine(), out isbn);
+    if (titulo == null || autor == null || isbnParse == false)
+    {
+        Console.WriteLine("Algun campo mal ingresado");
+        return;
+    }
+    bibliotecaService.AgregarLibro(titulo, autor, isbn);
+}
+
+void PrestarLibro()
+{
+    Console.WriteLine("Ingrese el id del usuario");
+    int idUsuario;
+    var usuarioParse = int.TryParse(Console.ReadLine(), out idUsuario);
+    Console.WriteLine("Ingrese el isbn del libro a prestar");
+    int isbn;
+    var isbnParse = int.TryParse(Console.ReadLine(), out isbn);
+    if (usuarioParse == false || isbnParse == false)
+    {
+        Console.WriteLine("Algun campo mal ingresado");
+        return;
+    }
+
+    bibliotecaService.PrestarLibro(idUsuario, isbn);
+    Console.ReadLine();
 }
 
 void mostrarMenu()
@@ -99,6 +124,8 @@ void mostrarMenu()
         return;
     }
 
+    
+
     switch (opcion)
     {
         case 1:
@@ -118,6 +145,13 @@ void mostrarMenu()
             break;
         case 6:
             VerLibrosPrestadosUsuario();
+            break;
+        case 7:
+            Environment.Exit(0);
+            break;
+        case 8:
+            foreach(var u in biblioteca.Usuarios) Console.WriteLine(u.Nombre);
+            Console.ReadLine();
             break;
         default:
             Console.WriteLine("Opcion Invalida"); break;

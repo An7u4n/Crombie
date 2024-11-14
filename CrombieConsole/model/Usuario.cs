@@ -1,16 +1,30 @@
 ﻿namespace CrombieConsole.model
 {
-    public class Usuario
+    public abstract class Usuario
     {
         public string Nombre { get; set; }
-        public int Id { get; set; }
+        public int IdUsuario { get; set; }
+        public int LimiteLibros { get; set; }
         public ICollection<Libro> LibrosPrestados { get; set; }
 
-        public Usuario(string nombre, int id)
+        public bool PrestarMaterial(Libro libro)
         {
-            Nombre = nombre;
-            Id = id;
-            LibrosPrestados = new List<Libro>();
+            if(LibrosPrestados.Count < LimiteLibros)
+            {
+                LibrosPrestados.Add(libro);
+                libro.Disponible = false;
+                return true;
+            } else
+            {
+                Console.WriteLine("Limite de libros alcanzado");
+                Console.ReadLine();
+            }
+            return false;
+        }
+        public void DevolverMaterial(Libro libro)
+        {
+            LibrosPrestados.Remove(libro);
+            libro.Disponible = true;
         }
     }
 }
