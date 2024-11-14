@@ -28,6 +28,7 @@ namespace CrombieConsole.Infrastructure.Repository
                 workbook.Save();
             }
         }
+
         public void AgregarHistorialPrestamo(Libro libro, Usuario usuario)
         {
             using (var workbook = new XLWorkbook(Filepath))
@@ -144,9 +145,7 @@ namespace CrombieConsole.Infrastructure.Repository
                     dataList.Add(libro);
                 }
             }
-
             return dataList;
         }
-
     }
 }

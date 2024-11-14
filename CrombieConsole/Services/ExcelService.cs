@@ -7,11 +7,11 @@ namespace CrombieConsole.Services
     public class ExcelService
     {
         public LibroExcelRepository LibroRepository { get; set; }
-        public UsuarioExcelResporitory UsuarioRepository { get; set; }
+        public UsuarioExcelRepository UsuarioRepository { get; set; }
         public ExcelService(string filepath) 
         {
             LibroRepository = new LibroExcelRepository(filepath);
-            UsuarioRepository = new UsuarioExcelResporitory(filepath);
+            UsuarioRepository = new UsuarioExcelRepository(filepath);
         }
 
         public void CargarDatosExcel(Biblioteca biblioteca)
@@ -51,6 +51,20 @@ namespace CrombieConsole.Services
             }
         }
 
+        public void AgregarProfesor(Profesor profesor)
+        {
+            if (profesor != null)
+            {
+                UsuarioRepository.RegistrarProfesor(profesor);
+            }
+        }
+        public void AgregarEstudiante(Estudiante estudiante)
+        {
+            if (estudiante != null)
+            {
+                UsuarioRepository.RegistrarEstudiante(estudiante);
+            }
+        }
         public void AgregarHistorialPrestamo(Libro libro, Usuario usuario)
         {
             LibroRepository.AgregarHistorialPrestamo(libro, usuario);

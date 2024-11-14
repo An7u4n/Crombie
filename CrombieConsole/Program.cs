@@ -1,11 +1,7 @@
 ﻿using CrombieConsole.model;
 using CrombieConsole.Services;
 
-var biblioteca = new Biblioteca();
-var excelService = new ExcelService(AppDomain.CurrentDomain.BaseDirectory + "../../../BibliotecaBaseDatos.xlsx");
-var bibliotecaService = new BibliotecaService(biblioteca, excelService);
-
-bibliotecaService.CargarDatos();
+var bibliotecaService = new BibliotecaService();
 
 while (true)
 {
@@ -49,13 +45,27 @@ void DevolverLibro()
     var usuario = int.Parse(Console.ReadLine());
     Console.WriteLine("Ingrese el isbn del libro");
     var isbn = int.Parse(Console.ReadLine());
-    bibliotecaService.DevolverLibro(isbn, usuario);
+    try
+    {
+        bibliotecaService.DevolverLibro(isbn, usuario);
+
+    }
+    catch(Exception ex)
+    {
+        Console.WriteLine(ex.Message);
+    }
     Console.ReadLine();
 }
 
 void VerEstadoDeLosLibros()
 {
-    bibliotecaService.VerEstadoLibros();
+    var libros = bibliotecaService.ObtenerLibros();
+    foreach (var libro in libros)
+    {
+        Console.Write($"Titulo: {libro.Titulo}, Autor: {libro.Autor}, ISBN: {libro.ISBN}, Disponible: ");
+        if (libro.Disponible == true) Console.WriteLine("Si");
+        else Console.WriteLine("No");
+    }
     Console.ReadLine();
 }
 
@@ -63,10 +73,20 @@ void VerLibrosPrestadosUsuario()
 {
     Console.WriteLine("Ingrese el id del usuario");
     var usuario = int.Parse(Console.ReadLine());
+    try
+    {
+        var libros = bibliotecaService.LibrosPrestadosUsuario(usuario);
 
-    bibliotecaService.MostrarLibrosPrestadosUsuario(usuario);
-    Console.ReadLine();
-
+        foreach (var libro in libros)
+        {
+            Console.Write($"Titulo: {libro.Titulo}, Autor: {libro.Autor}, ISBN: {libro.ISBN}");
+        }
+        Console.ReadLine();
+    }
+    catch (Exception ex) 
+    { 
+        Console.WriteLine(ex.Message); 
+    }
 }
 
 void AgregarLibro()
@@ -99,8 +119,14 @@ void PrestarLibro()
         Console.WriteLine("Algun campo mal ingresado");
         return;
     }
-
-    bibliotecaService.PrestarLibro(idUsuario, isbn);
+    try
+    {
+        bibliotecaService.PrestarLibro(idUsuario, isbn);
+    }
+    catch(Exception ex)
+    {
+        Console.WriteLine(ex.Message);
+    }
     Console.ReadLine();
 }
 
@@ -148,10 +174,6 @@ void mostrarMenu()
             break;
         case 7:
             Environment.Exit(0);
-            break;
-        case 8:
-            foreach(var u in biblioteca.Usuarios) Console.WriteLine(u.Nombre);
-            Console.ReadLine();
             break;
         default:
             Console.WriteLine("Opcion Invalida"); break;

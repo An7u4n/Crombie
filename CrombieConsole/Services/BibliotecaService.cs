@@ -1,21 +1,18 @@
 ﻿using CrombieConsole.model;
 using DocumentFormat.OpenXml.Bibliography;
+using DocumentFormat.OpenXml.Drawing.Charts;
+using DocumentFormat.OpenXml.Spreadsheet;
 
 namespace CrombieConsole.Services
 {
     public class BibliotecaService
     {
-        private Biblioteca Biblioteca;
-        public ExcelService ExcelService { get; set; }
-        public BibliotecaService(Biblioteca biblioteca, ExcelService excelService)
-        {
-            Biblioteca = biblioteca;
-            ExcelService = excelService;
-        }
-
-        public void CargarDatos()
+        private Biblioteca Biblioteca = new Biblioteca();
+        public ExcelService ExcelService = new ExcelService("C:/Users/migue/source/repos/Crombie/CrombieConsole/BibliotecaBaseDatos.xlsx");
+        public BibliotecaService()
         {
             ExcelService.CargarDatosExcel(Biblioteca);
+
         }
 
         public void DevolverLibro(int isbn, int idUsuario)
@@ -23,15 +20,13 @@ namespace CrombieConsole.Services
             var usuario = Biblioteca.Usuarios.FirstOrDefault(u => u.IdUsuario == idUsuario);
             if (usuario == null)
             {
-                Console.WriteLine("Usuario Inexistente");
-                return;
+                throw new Exception("Usuario Inexistente");
             }
 
             var libro = usuario.LibrosPrestados.FirstOrDefault(l => l.ISBN == isbn);
             if (libro == null)
             {
-                Console.WriteLine("Libro no prestado");
-                return;
+                throw new Exception("Libro no prestado");
             }
             libro.Disponible = true;
             usuario.LibrosPrestados.Remove(libro);
@@ -51,27 +46,23 @@ namespace CrombieConsole.Services
                     Console.WriteLine("Libro prestado");
                 } else
                 {
-                    Console.WriteLine("No se presto el libro, limite alcanzado");
+                    throw new Exception("No se presta el libro, limite alcanzado");
                 }
                 ExcelService.AgregarHistorialPrestamo(libroAPrestar, usuario);
-            }
-        }
-
-        public void MostrarLibrosDisponibles()
-        {
-            foreach (var libro in Biblioteca.Libros)
-            {
-                if (libro.Disponible == true)
-                {
-                    Console.WriteLine($"Titulo: {libro.Titulo}, Autor: {libro.Autor}, ISBN: {libro.ISBN}");
-                }
-            }
+            }else throw new Exception("Libro o usuario no existentes");
         }
 
         public void AgregarLibro(string titulo, string autor, int isbn)
         {
-            Biblioteca.Libros.Add(new Libro(titulo, autor, isbn));
-            ExcelService.AgregarLibro(titulo, autor, isbn);
+            try
+            {
+                Biblioteca.Libros.Add(new Libro(titulo, autor, isbn));
+                ExcelService.AgregarLibro(titulo, autor, isbn);
+            }
+            catch(Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
         }
 
         public void RegistrarEstudiante(string nombre, int id)
@@ -93,29 +84,20 @@ namespace CrombieConsole.Services
                 Console.WriteLine("Id de usuario ya usada");
             }
         }
-        public void VerEstadoLibros()
+
+        public List<Libro> ObtenerLibros()
         {
-            foreach (var libro in Biblioteca.Libros)
-            {
-                Console.Write($"Titulo: {libro.Titulo}, Autor: {libro.Autor}, ISBN: {libro.ISBN}, Disponible: ");
-                if (libro.Disponible == true) Console.WriteLine("Si");
-                else Console.WriteLine("No");
-            }
+            return Biblioteca.Libros.ToList();
         }
-        public void MostrarLibrosPrestadosUsuario(int idUsuario)
+
+        public List<Libro> LibrosPrestadosUsuario(int idUsuario)
         {
             var usuario = Biblioteca.Usuarios.FirstOrDefault(u => u.IdUsuario == idUsuario);
             if (usuario == null)
             {
-                Console.WriteLine("Usuario Inexistente");
-                Console.ReadLine();
-                return;
+                throw new Exception("Usuario Inexistente");
             }
-            Console.WriteLine("Lista de libros prestadas a " + usuario.Nombre);
-            foreach (var libro in usuario.LibrosPrestados)
-            {
-                Console.Write($"Titulo: {libro.Titulo}, Autor: {libro.Autor}, ISBN: {libro.ISBN}");
-            }
+            return usuario.LibrosPrestados.ToList();
         }
     }
 }
