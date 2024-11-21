@@ -5,7 +5,7 @@ namespace CrombieConsole.Services
 {
     public class ProfesorService
     {
-        private ExcelService excelService = new ExcelService("C:/Users/migue/source/repos/Crombie/CrombieConsole/BibliotecaBaseDatos.xlsx");
+        private ExcelService excelService = new ExcelService();
 
         public void RegistrarProfesor(string nombre, int id)
         {

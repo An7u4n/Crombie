@@ -6,7 +6,7 @@ namespace CrombieConsole.Services
     public class BibliotecaService
     {
         private Biblioteca Biblioteca = new Biblioteca();
-        public ExcelService ExcelService = new ExcelService("C:/Users/migue/source/repos/Crombie/CrombieConsole/BibliotecaBaseDatos.xlsx");
+        public ExcelService ExcelService = new ExcelService();
         public BibliotecaService()
         {
             ExcelService.CargarDatosExcel(Biblioteca);

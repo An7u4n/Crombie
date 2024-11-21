@@ -15,6 +15,19 @@ namespace Web.API.Controllers
             this.estudianteService = estudianteService;
         }
 
+        [HttpGet("ObtenerEstudiantes")]
+        public IActionResult ObtenerEstudiantes() {
+            try
+            {
+                var estudiantes = estudianteService.ObtenerEstudiantes();
+                return Ok(estudiantes);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest("No se pudo obtener los estudiantes. Error: " + ex.Message);
+            }
+        }
+
         [HttpPost("AgregarEstudiante")]
         public IActionResult AgregarEstudiante([FromBody] AgregarEstudianteRequest request)
         {

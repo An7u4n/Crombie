@@ -1,15 +1,15 @@
 ﻿using ClosedXML.Excel;
 using CrombieConsole.model;
 using CrombieConsole.Model;
-using DocumentFormat.OpenXml.Drawing;
+using Infrastructure.Repository.Intefaces;
 
 namespace CrombieConsole.Infrastructure.Repository
 {
-    public class LibroExcelRepository
+    public class LibroExcelRepository : ILibroRepository
     {
         public string Filepath { get; set; }
-        public LibroExcelRepository(string filepath) {
-            Filepath = filepath;
+        public LibroExcelRepository() {
+            Filepath = "C:/Users/migue/source/repos/Crombie/CrombieConsole/BibliotecaBaseDatos.xlsx";
         }
 
         public void AgregarLibro(string titulo, string autor, int isbn)
