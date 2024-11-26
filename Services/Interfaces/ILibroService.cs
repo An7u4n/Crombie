@@ -8,5 +8,6 @@ namespace Services.Interfaces
         List<Libro> ObtenerLibros();
         Libro ObtenerLibro(int isbn);
         List<Libro> ObtenerLibrosPrestadosAUsuario(int idUsuario);
+        void EliminarLibro(int isbn);
     }
 }

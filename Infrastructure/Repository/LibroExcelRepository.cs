@@ -223,5 +223,33 @@ namespace CrombieConsole.Data.Repository
                 workbook.Save();
             }
         }
+
+        public void EliminarLibro(Libro libro)
+        {
+            using (var workbook = new XLWorkbook(Filepath))
+            {
+                var worksheet = workbook.Worksheet(3);
+
+                int lastRowUsed = worksheet.LastRowUsed().RowNumber();
+
+                for (int row = 3; row <= lastRowUsed; row++)
+                {
+                    var isbn = worksheet.Cell(row, 1).GetValue<int>();
+                    if (isbn == libro.ISBN)
+                    {
+                        for(int j = row; j < lastRowUsed; j++)
+                        {
+                            worksheet.Cell(j, 1).Value = worksheet.Cell(j + 1, 1).GetValue<int>();
+                            worksheet.Cell(j, 2).Value = worksheet.Cell(j + 1, 2).GetValue<string>();
+                            worksheet.Cell(j, 3).Value = worksheet.Cell(j + 1, 3).GetValue<string>();
+                            worksheet.Cell(j, 4).Value = worksheet.Cell(j + 1, 4).GetValue<string>();
+                        }
+                        worksheet.Row(lastRowUsed).Delete();
+                        break;
+                    }
+                }
+                workbook.Save();
+            }
+        }
     }
 }

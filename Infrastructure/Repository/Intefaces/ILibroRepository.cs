@@ -14,5 +14,6 @@ namespace Data.Repository.Intefaces
         public void ActualizarDisponibilidadLibro(Libro libro);
         public List<Libro> ObtenerLibrosPrestadosAUsuario(int idUsuario);
         public void ActualizarLibro(Libro libro);
+        public void EliminarLibro(Libro libro);
     }
 }

@@ -107,5 +107,19 @@ namespace Web.API.Controllers
                 return BadRequest(ex.Message);
             }
         }
+
+        [HttpDelete]
+        public IActionResult EliminarLibro(int isbn)
+        {
+            try
+            {
+                _libroService.EliminarLibro(isbn);
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
     }
 }

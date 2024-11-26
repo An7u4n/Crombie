@@ -63,5 +63,19 @@ namespace Services
         {
             return _libroRepository.ObtenerLibros().First(l => l.ISBN == isbn);
         }
+
+        public void EliminarLibro(int isbn)
+        {
+            try
+            {
+                var libro = _libroRepository.ObtenerLibro(isbn);
+                _libroRepository.EliminarLibro(libro);
+            }
+            catch(Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+
+        }
     }
 }
