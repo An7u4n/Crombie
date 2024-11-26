@@ -1,16 +1,44 @@
-﻿using CrombieConsole.Infrastructure.Repository;
+﻿using CrombieConsole.Data.Repository;
 using CrombieConsole.model;
+using Data.Repository.Intefaces;
+using Services.Interfaces;
 
 namespace CrombieConsole.Services
 {
-    public class ProfesorService
+    public class ProfesorService : IProfesorService
     {
-        private ExcelService excelService = new ExcelService();
+        private readonly IUsuarioRepository _usuarioRepository;
+        public ProfesorService(IUsuarioRepository usuarioRepository)
+        {
+            _usuarioRepository = usuarioRepository;
+        }
 
         public void RegistrarProfesor(string nombre, int id)
         {
-            var profesor = new Profesor(nombre, id);
-            excelService.AgregarProfesor(profesor);
+            try
+            {
+                var profesor = new Profesor(nombre, id);
+                _usuarioRepository.RegistrarProfesor(profesor);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
+
+        public List<Profesor> ObtenerProfesores()
+        {
+            try
+            {
+                var profesores = _usuarioRepository.ObtenerProfesores();
+                if(profesores == null || profesores.Count == 0)
+                    throw new Exception("No se encontraron profesores en la base de datos");
+                return profesores;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
         }
     }
 }

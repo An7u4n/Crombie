@@ -1,6 +1,7 @@
 ﻿using CrombieConsole.model;
 using CrombieConsole.Services;
-
+int hola = 1;
+/*
 var bibliotecaService = new BibliotecaService();
 
 while (true)
@@ -179,3 +180,4 @@ void mostrarMenu()
             Console.WriteLine("Opcion Invalida"); break;
     }
 }
+*/

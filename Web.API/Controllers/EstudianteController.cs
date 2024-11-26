@@ -1,6 +1,7 @@
 ﻿using CrombieConsole.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Services.Interfaces;
 using Web.API.Requests;
 
 namespace Web.API.Controllers
@@ -9,17 +10,17 @@ namespace Web.API.Controllers
     [ApiController]
     public class EstudianteController : ControllerBase
     {
-        private readonly EstudianteService estudianteService;
-        public EstudianteController(EstudianteService estudianteService)
+        private readonly IEstudianteService _estudianteService;
+        public EstudianteController(IEstudianteService estudianteService)
         {
-            this.estudianteService = estudianteService;
+            _estudianteService = estudianteService;
         }
 
         [HttpGet("ObtenerEstudiantes")]
         public IActionResult ObtenerEstudiantes() {
             try
             {
-                var estudiantes = estudianteService.ObtenerEstudiantes();
+                var estudiantes = _estudianteService.ObtenerEstudiantes();
                 return Ok(estudiantes);
             }
             catch (Exception ex)
@@ -33,7 +34,7 @@ namespace Web.API.Controllers
         {
             try
             {
-                estudianteService.RegistrarEstudiante(request.Nombre, request.IdUsuario);
+                _estudianteService.RegistrarEstudiante(request.Nombre, request.IdUsuario);
                 return Ok();
             }
             catch (Exception ex)

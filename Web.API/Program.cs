@@ -1,6 +1,9 @@
-using CrombieConsole.Infrastructure.Repository;
+using CrombieConsole.Data.Repository;
 using CrombieConsole.Services;
-using Infrastructure.Repository.Intefaces;
+using Data.Repository;
+using Data.Repository.Intefaces;
+using Services;
+using Services.Interfaces;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -10,11 +13,12 @@ builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-builder.Services.AddSingleton<BibliotecaService>();
-builder.Services.AddSingleton<ProfesorService>();
-builder.Services.AddSingleton<EstudianteService>();
-builder.Services.AddSingleton<ILibroRepository, LibroExcelRepository>();
-builder.Services.AddSingleton<IUsuarioRepository, UsuarioExcelRepository>();
+builder.Services.AddScoped<IBibliotecaService, BibliotecaService>();
+builder.Services.AddScoped<IProfesorService, ProfesorService>();
+builder.Services.AddScoped<IEstudianteService, EstudianteService>();
+builder.Services.AddScoped<ILibroService, LibroService>();
+builder.Services.AddScoped<ILibroRepository, LibroExcelRepository>();
+builder.Services.AddScoped<IUsuarioRepository, UsuarioExcelRepository>();
 
 var app = builder.Build();
 

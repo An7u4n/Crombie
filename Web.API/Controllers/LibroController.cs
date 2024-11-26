@@ -1,6 +1,8 @@
 ﻿using CrombieConsole.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Services;
+using Services.Interfaces;
 using Web.API.Requests;
 
 namespace Web.API.Controllers
@@ -9,16 +11,18 @@ namespace Web.API.Controllers
     [ApiController]
     public class LibroController : ControllerBase
     {
-        private readonly BibliotecaService bibliotecaService;
-        public LibroController(BibliotecaService bibliotecaService) 
+        private readonly IBibliotecaService _bibliotecaService;
+        private readonly ILibroService _libroService;
+        public LibroController(IBibliotecaService bibliotecaService, ILibroService libroService) 
         {
-            this.bibliotecaService = bibliotecaService;
+            _bibliotecaService = bibliotecaService;
+            _libroService = libroService;
         }
 
         [HttpGet("ObtenerEstadoLibros")]
         public IActionResult GetLibros()
         {
-            return Ok(bibliotecaService.ObtenerLibros());
+            return Ok(_libroService.ObtenerLibros());
         }
 
         [HttpPost("AgregarLibro")]
@@ -26,7 +30,7 @@ namespace Web.API.Controllers
         {
             try
             {
-                bibliotecaService.AgregarLibro(request.Titulo, request.Autor, request.ISBN);
+                _bibliotecaService.AgregarLibro(request.Titulo, request.Autor, request.ISBN);
                 return Ok();
             }
             catch (Exception ex)
@@ -40,7 +44,7 @@ namespace Web.API.Controllers
         {
             try
             {
-                bibliotecaService.PrestarLibro(request.IdUsuario, request.ISBN);
+                _bibliotecaService.PrestarLibro(request.IdUsuario, request.ISBN);
                 return Ok();
             }
             catch(Exception ex)
@@ -54,7 +58,7 @@ namespace Web.API.Controllers
         {
             try
             {
-                bibliotecaService.DevolverLibro(request.ISBN, request.IdUsuario);
+                _bibliotecaService.DevolverLibro(request.ISBN, request.IdUsuario);
                 return Ok();
             }
             catch (Exception ex)
@@ -68,7 +72,35 @@ namespace Web.API.Controllers
         {
             try
             {
-                return Ok(bibliotecaService.LibrosPrestadosUsuario(id));
+                return Ok(_libroService.ObtenerLibrosPrestadosAUsuario(id));
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpGet("ObtenerLibro/{isbn}")]
+        public IActionResult GetLibro(int isbn)
+        {
+            try
+            {
+                return Ok();
+                //return Ok(_libroService.ObtenerLibro(isbn));
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpPut("ActualizarLibro")]
+        public IActionResult ActualizarLibro([FromBody] AgregarLibroRequest request)
+        {
+            try
+            {
+                _bibliotecaService.ActualizarLibro(request.ISBN, request.Titulo, request.Autor);
+                return Ok();
             }
             catch (Exception ex)
             {

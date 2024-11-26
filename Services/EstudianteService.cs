@@ -1,20 +1,40 @@
 ﻿using CrombieConsole.model;
+using Data.Repository.Intefaces;
+using Services.Interfaces;
 
 namespace CrombieConsole.Services
 {
-    public class EstudianteService
+    public class EstudianteService : IEstudianteService
     {
-        private ExcelService excelService = new ExcelService();
+        private readonly IUsuarioRepository _usuarioRepository;
+        public EstudianteService(IUsuarioRepository usuarioRepository)
+        {
+            _usuarioRepository = usuarioRepository;
+        }
 
         public void RegistrarEstudiante(string nombre, int id)
         {
             var estudiante = new Estudiante(nombre, id);
-            excelService.AgregarEstudiante(estudiante);
+            try
+            {
+                _usuarioRepository.RegistrarEstudiante(estudiante);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
         }
 
         public List<Estudiante> ObtenerEstudiantes()
         {
-            return excelService.ObtenerEstudiantes();
+            try
+            {
+                return _usuarioRepository.ObtenerEstudiantes();
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
         }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using CrombieConsole.Services;
 using Microsoft.AspNetCore.Mvc;
+using Services.Interfaces;
 using Web.API.Requests;
 
 namespace Web.API.Controllers
@@ -9,10 +10,10 @@ namespace Web.API.Controllers
     [ApiController]
     public class ProfesorController : ControllerBase
     {
-        private readonly ProfesorService profesorService;
-        public ProfesorController(ProfesorService profesorService)
+        private readonly IProfesorService _profesorService;
+        public ProfesorController(IProfesorService profesorService)
         {
-            this.profesorService = profesorService;
+            _profesorService = profesorService;
         }
 
         [HttpPost("AgregarProfesor")]
@@ -20,12 +21,26 @@ namespace Web.API.Controllers
         {
             try
             {
-                profesorService.RegistrarProfesor(request.Nombre, request.IdUsuario);
+                _profesorService.RegistrarProfesor(request.Nombre, request.IdUsuario);
                 return Ok();
             }
             catch (Exception ex)
             {
                 return BadRequest("No se pudo agregar el profesor. Error: " + ex.Message);
+            }
+        }
+
+        [HttpGet("ObtenerProfesores")]
+        public IActionResult ObtenerProfesores()
+        {
+            try
+            {
+                var profesores = _profesorService.ObtenerProfesores();
+                return Ok(profesores);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest("No se pudo obtener los profesores. Error: " + ex.Message);
             }
         }
     }

@@ -1,9 +1,10 @@
 ﻿using ClosedXML.Excel;
 using CrombieConsole.model;
 using CrombieConsole.Model;
-using Infrastructure.Repository.Intefaces;
+using DocumentFormat.OpenXml.Drawing;
+using Data.Repository.Intefaces;
 
-namespace CrombieConsole.Infrastructure.Repository
+namespace CrombieConsole.Data.Repository
 {
     public class LibroExcelRepository : ILibroRepository
     {
@@ -112,7 +113,12 @@ namespace CrombieConsole.Infrastructure.Repository
                     var isbn = worksheet.Cell(row, 1).GetValue<int>();
                     if (isbn == libro.ISBN)
                     {
-                        worksheet.Cell(row, 4).Value = libro.Disponible ? "Disponible" : "No Disponible";
+                        if (libro.Disponible == true)
+                        {
+                            worksheet.Cell(row, 4).Value = "No Disponible";
+
+                        }
+                        else worksheet.Cell(row, 4).Value = "Disponible";
                         break;
                     }
                 }
@@ -146,6 +152,76 @@ namespace CrombieConsole.Infrastructure.Repository
                 }
             }
             return dataList;
+        }
+
+        public Libro ObtenerLibro(int isbn)
+        {
+            using (var workbook = new XLWorkbook(Filepath))
+            {
+                // la hoja de excel que contiene los libros es 3
+                var worksheet = workbook.Worksheet(3);
+
+                int lastRowUsed = worksheet.LastRowUsed().RowNumber();
+
+                for (int row = 3; row <= lastRowUsed; row++)
+                {
+                    var isbnExcel = worksheet.Cell(row, 1).GetValue<int>();
+                    if (isbnExcel == isbn)
+                    {
+                        var disponible = worksheet.Cell(row, 4).GetValue<string>() == "Disponible" ? true : false;
+                        var libro = new Libro
+                        {
+                            ISBN = isbnExcel,
+                            Titulo = worksheet.Cell(row, 2).GetValue<string>(),
+                            Autor = worksheet.Cell(row, 3).GetValue<string>(),
+                            Disponible = disponible
+                        };
+                        return libro;
+                    }
+                }
+            }
+            throw new Exception("No se ha encontrado el libro");
+        }
+
+        public List<Libro> ObtenerLibrosPrestadosAUsuario(int idUsuario)
+        {
+            var historialBiblioteca = ObtenerHistorialBiblioteca();
+            var librosBiblioteca = ObtenerLibros();
+            List<Libro> librosPrestados = new List<Libro>();
+            foreach (var historial in historialBiblioteca)
+            {
+                var libro = librosBiblioteca.FirstOrDefault(l => l.ISBN == historial.ISBN);
+                if (historial.IdUsuario == idUsuario && historial.Accion == Accion.Prestamo && libro != null)
+                {
+                    librosPrestados.Add(libro);
+                } else if(historial.IdUsuario == idUsuario && historial.Accion == Accion.Devolucion && libro != null)
+                {
+                    librosPrestados.Remove(libro);
+                }
+            }
+            return librosPrestados;
+        }
+
+        public void ActualizarLibro(Libro libro)
+        {
+            using (var workbook = new XLWorkbook(Filepath))
+            {
+                var worksheet = workbook.Worksheet(3);
+
+                int lastRowUsed = worksheet.LastRowUsed().RowNumber();
+
+                for (int row = 3; row <= lastRowUsed; row++)
+                {
+                    var isbn = worksheet.Cell(row, 1).GetValue<int>();
+                    if (isbn == libro.ISBN)
+                    {
+                        worksheet.Cell(row, 2).Value = libro.Titulo;
+                        worksheet.Cell(row, 3).Value = libro.Autor;
+                        break;
+                    }
+                }
+                workbook.Save();
+            }
         }
     }
 }
