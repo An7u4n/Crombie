@@ -1,6 +1,7 @@
 ﻿using CrombieConsole.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Model.DTOs;
 using Services;
 using Services.Interfaces;
 using Web.API.Requests;
@@ -26,11 +27,11 @@ namespace Web.API.Controllers
         }
 
         [HttpPost("AgregarLibro")]
-        public IActionResult AgregarLibro([FromBody] AgregarLibroRequest request)
+        public IActionResult AgregarLibro([FromBody] LibroDTO libro)
         {
             try
             {
-                _bibliotecaService.AgregarLibro(request.Titulo, request.Autor, request.ISBN);
+                _bibliotecaService.AgregarLibro(libro.Titulo, libro.Autor, libro.ISBN);
                 return Ok();
             }
             catch (Exception ex)
@@ -85,8 +86,7 @@ namespace Web.API.Controllers
         {
             try
             {
-                return Ok();
-                //return Ok(_libroService.ObtenerLibro(isbn));
+                return Ok(_libroService.ObtenerLibro(isbn));
             }
             catch (Exception ex)
             {
@@ -95,11 +95,11 @@ namespace Web.API.Controllers
         }
 
         [HttpPut("ActualizarLibro")]
-        public IActionResult ActualizarLibro([FromBody] AgregarLibroRequest request)
+        public IActionResult ActualizarLibro([FromBody] LibroDTO libro)
         {
             try
             {
-                _bibliotecaService.ActualizarLibro(request.ISBN, request.Titulo, request.Autor);
+                _bibliotecaService.ActualizarLibro(libro.ISBN, libro.Titulo, libro.Autor);
                 return Ok();
             }
             catch (Exception ex)

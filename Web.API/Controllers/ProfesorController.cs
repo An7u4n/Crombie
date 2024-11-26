@@ -1,5 +1,6 @@
 ﻿using CrombieConsole.Services;
 using Microsoft.AspNetCore.Mvc;
+using Model.DTOs;
 using Services.Interfaces;
 using Web.API.Requests;
 
@@ -17,11 +18,11 @@ namespace Web.API.Controllers
         }
 
         [HttpPost("AgregarProfesor")]
-        public IActionResult AgregarProfesor([FromBody] AgregarProfesorRequest request)
+        public IActionResult AgregarProfesor([FromBody] UsuarioDTO profesor)
         {
             try
             {
-                _profesorService.RegistrarProfesor(request.Nombre, request.IdUsuario);
+                _profesorService.RegistrarProfesor(profesor.Nombre, profesor.IdUsuario);
                 return Ok();
             }
             catch (Exception ex)

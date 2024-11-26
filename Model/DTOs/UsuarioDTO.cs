@@ -1,6 +1,6 @@
-﻿namespace Web.API.Requests
+﻿namespace Model.DTOs
 {
-    public class AgregarEstudianteRequest
+    public class UsuarioDTO
     {
         public string Nombre { get; set; }
         public int IdUsuario { get; set; }

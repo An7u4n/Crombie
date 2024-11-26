@@ -58,5 +58,10 @@ namespace Services
                 throw new Exception(ex.Message);
             }
         }
+
+        public Libro ObtenerLibro(int isbn)
+        {
+            return _libroRepository.ObtenerLibros().First(l => l.ISBN == isbn);
+        }
     }
 }

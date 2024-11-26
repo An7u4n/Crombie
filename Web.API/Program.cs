@@ -4,6 +4,7 @@ using Data.Repository;
 using Data.Repository.Intefaces;
 using Services;
 using Services.Interfaces;
+using Web.API.Logger;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -20,6 +21,12 @@ builder.Services.AddScoped<ILibroService, LibroService>();
 builder.Services.AddScoped<ILibroRepository, LibroExcelRepository>();
 builder.Services.AddScoped<IUsuarioRepository, UsuarioExcelRepository>();
 
+var logFilePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "logs", "api-errors.log");
+
+Directory.CreateDirectory(Path.GetDirectoryName(logFilePath));
+
+builder.Services.AddSingleton(new FileLogger(logFilePath));
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -32,6 +39,8 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 
 app.UseAuthorization();
+
+app.UseMiddleware<ErrorLoggingMiddleware>();
 
 app.MapControllers();
 

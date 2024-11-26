@@ -1,6 +1,7 @@
 ﻿using CrombieConsole.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Model.DTOs;
 using Services.Interfaces;
 using Web.API.Requests;
 
@@ -30,11 +31,11 @@ namespace Web.API.Controllers
         }
 
         [HttpPost("AgregarEstudiante")]
-        public IActionResult AgregarEstudiante([FromBody] AgregarEstudianteRequest request)
+        public IActionResult AgregarEstudiante([FromBody] UsuarioDTO estudiante)
         {
             try
             {
-                _estudianteService.RegistrarEstudiante(request.Nombre, request.IdUsuario);
+                _estudianteService.RegistrarEstudiante(estudiante.Nombre, estudiante.IdUsuario);
                 return Ok();
             }
             catch (Exception ex)
