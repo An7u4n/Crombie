@@ -5,9 +5,9 @@ namespace Services.Interfaces
     public interface ILibroService
     {
         void DevolverLibro(int isbn, int idUsuario);
-        List<Libro> ObtenerLibros();
+        ICollection<Libro> ObtenerLibros();
         Libro ObtenerLibro(int isbn);
-        List<Libro> ObtenerLibrosPrestadosAUsuario(int idUsuario);
+        ICollection<Libro> ObtenerLibrosPrestadosAUsuario(int idUsuario);
         void EliminarLibro(int isbn);
     }
 }

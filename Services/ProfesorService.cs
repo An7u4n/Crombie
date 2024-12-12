@@ -1,4 +1,4 @@
-﻿using CrombieConsole.Data.Repository;
+﻿using Data.Repository.Excel;
 using CrombieConsole.model;
 using Data.Repository.Intefaces;
 using Services.Interfaces;
@@ -26,7 +26,7 @@ namespace CrombieConsole.Services
             }
         }
 
-        public List<Profesor> ObtenerProfesores()
+        public ICollection<Profesor> ObtenerProfesores()
         {
             try
             {

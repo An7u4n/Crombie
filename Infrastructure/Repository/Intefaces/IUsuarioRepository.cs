@@ -4,9 +4,9 @@ namespace Data.Repository.Intefaces
 {
     public interface IUsuarioRepository
     {
-        List<Estudiante> ObtenerEstudiantes();
-        List<Profesor> ObtenerProfesores();
-        List<Usuario> ObtenerUsuarios();
+        ICollection<Estudiante> ObtenerEstudiantes();
+        ICollection<Profesor> ObtenerProfesores();
+        ICollection<Usuario> ObtenerUsuarios();
         Usuario ObtenerUsuario(int idUsuario);
         void RegistrarEstudiante(Estudiante estudiante);
         void RegistrarProfesor(Profesor profesor);

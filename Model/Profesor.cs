@@ -2,10 +2,11 @@
 {
     public class Profesor : Usuario
     {
+        public Profesor() { }
         public Profesor(string nombre, int id)
         {
             Nombre = nombre;
-            IdUsuario = id;
+            id_usuario = id;
             LibrosPrestados = new List<Libro>();
             LimiteLibros = 5;
         }

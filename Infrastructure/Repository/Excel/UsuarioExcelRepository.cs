@@ -3,7 +3,7 @@ using CrombieConsole.model;
 using DocumentFormat.OpenXml.Drawing;
 using Data.Repository.Intefaces;
 
-namespace CrombieConsole.Data.Repository
+namespace Data.Repository.Excel
 {
     public class UsuarioExcelRepository : IUsuarioRepository
     {
@@ -25,7 +25,7 @@ namespace CrombieConsole.Data.Repository
 
                 int lastRowUsed = worksheet.LastRowUsed().RowNumber();
 
-                worksheet.Cell(lastRowUsed + 1, 1).Value = profesor.IdUsuario;
+                worksheet.Cell(lastRowUsed + 1, 1).Value = profesor.id_usuario;
                 worksheet.Cell(lastRowUsed + 1, 2).Value = profesor.Nombre;
                 worksheet.Cell(lastRowUsed + 1, 3).Value = "Profesor";
 
@@ -42,7 +42,7 @@ namespace CrombieConsole.Data.Repository
 
                 int lastRowUsed = worksheet.LastRowUsed().RowNumber();
 
-                worksheet.Cell(lastRowUsed + 1, 1).Value = estudiante.IdUsuario;
+                worksheet.Cell(lastRowUsed + 1, 1).Value = estudiante.id_usuario;
                 worksheet.Cell(lastRowUsed + 1, 2).Value = estudiante.Nombre;
                 worksheet.Cell(lastRowUsed + 1, 3).Value = "Estudiante";
 
@@ -50,7 +50,7 @@ namespace CrombieConsole.Data.Repository
             }
         }
 
-        public List<Usuario> ObtenerUsuarios()
+        public ICollection<Usuario> ObtenerUsuarios()
         {
             var dataList = new List<Usuario>();
 
@@ -85,7 +85,7 @@ namespace CrombieConsole.Data.Repository
             return dataList;
         }
 
-        public List<Estudiante> ObtenerEstudiantes()
+        public ICollection<Estudiante> ObtenerEstudiantes()
         {
             var dataList = new List<Estudiante>();
 
@@ -112,7 +112,7 @@ namespace CrombieConsole.Data.Repository
             return dataList;
         }
 
-        public List<Profesor> ObtenerProfesores()
+        public ICollection<Profesor> ObtenerProfesores()
         {
             var dataList = new List<Profesor>();
 

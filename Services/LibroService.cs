@@ -14,12 +14,12 @@ namespace Services
             _libroRepository = libroRepository;
             _usuarioRepository = usuarioRepository;
         }
-        public List<Libro> ObtenerLibros()
+        public ICollection<Libro> ObtenerLibros()
         {
             return _libroRepository.ObtenerLibros();
         }
 
-        public List<Libro> ObtenerLibrosPrestadosAUsuario(int idUsuario)
+        public ICollection<Libro> ObtenerLibrosPrestadosAUsuario(int idUsuario)
         {
             try
             {

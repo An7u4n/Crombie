@@ -22,6 +22,7 @@ namespace CrombieConsole.Services
             {
                 var libro = _libroRepository.ObtenerLibro(isbn);
                 var usuario = _usuarioRepository.ObtenerUsuario(idUsuario);
+                usuario.LibrosPrestados = _libroRepository.ObtenerLibrosPrestadosAUsuario(idUsuario);
                 if (usuario == null) throw new Exception("El usuario no existe");
                 if (!usuario.LibrosPrestados.Any(l => l.ISBN == libro.ISBN)) throw new Exception("El usuario no pidio prestado el libro");
                 _libroRepository.AgregarHistorialDevolucion(libro, usuario);
@@ -38,16 +39,17 @@ namespace CrombieConsole.Services
             var libroAPrestar = _libroRepository.ObtenerLibro(isbn);
             if (libroAPrestar != null && libroAPrestar.Disponible == true && usuario != null)
             {
-                if (usuario.LibrosPrestados.Count < usuario.LimiteLibros)
-                {
-                    _libroRepository.AgregarHistorialPrestamo(libroAPrestar, usuario);
-                }
-                else
-                {
-                    throw new Exception("No se presta el libro, limite alcanzado");
-                }
+                //if (usuario.LibrosPrestados.Count < Usuario.LimiteLibros)
+                //{ 
+                _libroRepository.AgregarHistorialPrestamo(libroAPrestar, usuario);
+                _libroRepository.ActualizarDisponibilidadLibro(libroAPrestar);
+                //}
+                //else
+                //{
+                //    throw new Exception("No se presta el libro, limite alcanzado");
+                //}
             }
-            else throw new Exception("Libro o usuario no existentes");
+            else throw new Exception("Libro no disponible, inexistente o usuario no existente");
         }
 
         public void AgregarLibro(string titulo, string autor, int isbn)
@@ -66,7 +68,7 @@ namespace CrombieConsole.Services
         {
             try
             {
-                _libroRepository.ObtenerLibro(isbn); // Lanza excepcion si no existe el libro
+                _libroRepository.ObtenerLibro(isbn);
                 var libro = new Libro(titulo, autor, isbn);
                 _libroRepository.ActualizarLibro(libro);
             }

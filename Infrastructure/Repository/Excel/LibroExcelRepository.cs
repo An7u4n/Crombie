@@ -4,12 +4,13 @@ using CrombieConsole.Model;
 using DocumentFormat.OpenXml.Drawing;
 using Data.Repository.Intefaces;
 
-namespace CrombieConsole.Data.Repository
+namespace Data.Repository.Excel
 {
     public class LibroExcelRepository : ILibroRepository
     {
         public string Filepath { get; set; }
-        public LibroExcelRepository() {
+        public LibroExcelRepository()
+        {
             Filepath = "C:/Users/migue/source/repos/Crombie/CrombieConsole/BibliotecaBaseDatos.xlsx";
         }
 
@@ -39,7 +40,7 @@ namespace CrombieConsole.Data.Repository
 
                 int lastRowUsed = worksheet.LastRowUsed().RowNumber();
 
-                worksheet.Cell(lastRowUsed + 1, 1).Value = usuario.IdUsuario;
+                worksheet.Cell(lastRowUsed + 1, 1).Value = usuario.id_usuario;
                 worksheet.Cell(lastRowUsed + 1, 2).Value = usuario.Nombre;
                 worksheet.Cell(lastRowUsed + 1, 3).Value = "Prestamo";
                 worksheet.Cell(lastRowUsed + 1, 4).Value = libro.ISBN;
@@ -60,7 +61,7 @@ namespace CrombieConsole.Data.Repository
 
                 int lastRowUsed = worksheet.LastRowUsed().RowNumber();
 
-                worksheet.Cell(lastRowUsed + 1, 1).Value = usuario.IdUsuario;
+                worksheet.Cell(lastRowUsed + 1, 1).Value = usuario.id_usuario;
                 worksheet.Cell(lastRowUsed + 1, 2).Value = usuario.Nombre;
                 worksheet.Cell(lastRowUsed + 1, 3).Value = "Devolucion";
                 worksheet.Cell(lastRowUsed + 1, 4).Value = libro.ISBN;
@@ -72,7 +73,7 @@ namespace CrombieConsole.Data.Repository
             }
         }
 
-        public List<HistorialBiblioteca> ObtenerHistorialBiblioteca()
+        public ICollection<HistorialBiblioteca> ObtenerHistorialBiblioteca()
         {
             using (var workbook = new XLWorkbook(Filepath))
             {
@@ -126,7 +127,7 @@ namespace CrombieConsole.Data.Repository
             }
         }
 
-        public List<Libro> ObtenerLibros()
+        public ICollection<Libro> ObtenerLibros()
         {
             var dataList = new List<Libro>();
 
@@ -183,7 +184,7 @@ namespace CrombieConsole.Data.Repository
             throw new Exception("No se ha encontrado el libro");
         }
 
-        public List<Libro> ObtenerLibrosPrestadosAUsuario(int idUsuario)
+        public ICollection<Libro> ObtenerLibrosPrestadosAUsuario(int idUsuario)
         {
             var historialBiblioteca = ObtenerHistorialBiblioteca();
             var librosBiblioteca = ObtenerLibros();
@@ -194,7 +195,8 @@ namespace CrombieConsole.Data.Repository
                 if (historial.IdUsuario == idUsuario && historial.Accion == Accion.Prestamo && libro != null)
                 {
                     librosPrestados.Add(libro);
-                } else if(historial.IdUsuario == idUsuario && historial.Accion == Accion.Devolucion && libro != null)
+                }
+                else if (historial.IdUsuario == idUsuario && historial.Accion == Accion.Devolucion && libro != null)
                 {
                     librosPrestados.Remove(libro);
                 }
@@ -237,7 +239,7 @@ namespace CrombieConsole.Data.Repository
                     var isbn = worksheet.Cell(row, 1).GetValue<int>();
                     if (isbn == libro.ISBN)
                     {
-                        for(int j = row; j < lastRowUsed; j++)
+                        for (int j = row; j < lastRowUsed; j++)
                         {
                             worksheet.Cell(j, 1).Value = worksheet.Cell(j + 1, 1).GetValue<int>();
                             worksheet.Cell(j, 2).Value = worksheet.Cell(j + 1, 2).GetValue<string>();

@@ -25,7 +25,7 @@ namespace CrombieConsole.Services
             }
         }
 
-        public List<Estudiante> ObtenerEstudiantes()
+        public ICollection<Estudiante> ObtenerEstudiantes()
         {
             try
             {
